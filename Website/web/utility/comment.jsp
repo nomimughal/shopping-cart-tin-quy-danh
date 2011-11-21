@@ -1,4 +1,4 @@
-﻿<%-- 
+﻿?<%-- 
     Document   : comment
     Created on : Nov 20, 2011, 2:51:12 PM
     Author     : CongDanh
@@ -7,14 +7,12 @@
 <%@page import="java.sql.Date"%>
 <%@page import="java.util.logging.Logger"%>
 <%@page import="java.util.logging.Level"%>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-    "http://www.w3.org/TR/html4/loose.dtd">
-
-<jsp:declaration>
-
-</jsp:declaration>
-<script src="../javascript/AjaxRequest.js" type="text/javascript" language="javascript"></script>
-<script src="../javascript/vietUni.js" type="text/javascript" language="javascript" ></script>
+<script type="text/javascript" language="javascript">
+    <%@include file="../javascript/AjaxRequest.js" %>
+</script>
+<script type="text/javascript" language="javascript" >
+    <%@include file="../javascript/vietUni.js" %>
+</script>
 <%
             try {
                 java.sql.Connection con = hp.helper.getConnection(getServletContext());
