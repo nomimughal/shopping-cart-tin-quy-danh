@@ -4,12 +4,7 @@
  */
 package hp;
 
-import java.sql.SQLException;
-import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServlet;
 
 /**
  *
@@ -19,7 +14,7 @@ public class helper {
     public static java.sql.Connection getConnection(ServletContext context) {
         try {
             java.util.Properties pr = new java.util.Properties();
-            java.io.InputStream is = context.getResourceAsStream("conf.properties");
+            java.io.InputStream is = context.getResourceAsStream("/WEB-INF/config.properties");
             pr.load(is);
             String driver = pr.getProperty("driver");
             String url = pr.getProperty("url");
