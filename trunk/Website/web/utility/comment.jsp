@@ -16,7 +16,7 @@
 <%
             try {
                 java.sql.Connection con = hp.helper.getConnection(getServletContext());
-                java.sql.PreparedStatement pSt = con.prepareStatement("select * from tblComment where catID=? and not exists (select * from tblCommentRelative where tblCommentRelative.parentCommentID = tblComment.cmtID)");
+                java.sql.PreparedStatement pSt = con.prepareStatement("select * from tblComment where catID=? and not exists (select * from tblCommentRelative where tblCommentRelative.childCommentID = tblComment.cmtID)");
                 pSt.setString(1, request.getParameter("catID"));
                 java.sql.ResultSet rs = pSt.executeQuery();
                 while (rs.next()) {
@@ -31,7 +31,7 @@
                     String name = rs1.getNString(1);
 %>
 <div class="parent">
-    Vào lúc <%= time.toString()%> ngày <%= date%>, <%= name%> ?ã vi?t:
+    Vào lúc <%= time.toString()%> ngày <%= date%>, <%= name%> đã viết:
     <br/>
     <%= cmt%>
 
@@ -52,16 +52,15 @@
                         name = rs2.getNString(1);
 %>
 <div class="child" style="padding-left: 20px">
-    Vào lúc <%= time.toString()%> ngày <%= date%>, <%= name%> ?ã vi?t:
+    Vào lúc <%= time.toString()%> ngày <%= date%>, <%= name%> đã viết:
     <br/>
     <%= cmt%>
 </div>
 <%
                     }
 %>
-<!--
-<div class="reply">
-    <form name="frmReply" onsubmit="submitForm(this);return false;" action="utility">
+<div class="reply" style="padding-left: 20px">
+    <form name="frmReply" onreset="InputDefault(this);return false;"><!--onsubmit="submitForm(this);return false;"-->
         <div style="padding-top:0px;">
             <div style="padding-top:10px; width:476px; background-color:#ffffff">
                 <div style="padding-bottom:5px; overflow:hidden;">
@@ -75,14 +74,14 @@
                 <div style="overflow:hidden;">
                     <div style="width:60%">
                         <input type="submit" value="Gửi" name="B1">
-                        <input type="button" value="Xoá trắng" name="B2" onclick="InputDefault();">
+                        <input type="reset" value="Xoá trắng" name="B2">
                         <input type="hidden" name="catID" value="<%=request.getParameter("catID")%>">
-                        <input type="hidden" name="parentCmtID" value="<%= cmtID%>"
+                        <input type="hidden" name="parentCmtID" value="<%= cmtID%>" />
                     </div>
                     <div style="width:40%; text-align:right;">
-                        <input type="radio" name="optInput" value="0" style="vertical-align:middle; margin-top:0px;" onfocus="setTypingMode(0)">
+                        <input type="radio" name="optInput" value="0" style="vertical-align:middle; margin-top:0px;" onfocus="setTypingMode(0)" checked="checked">
                         Off
-                        <input type="radio" name="optInput" value="1" style="vertical-align:middle; margin-top:0px;" onfocus="setTypingMode(1)" checked="">
+                        <input type="radio" name="optInput" value="1" style="vertical-align:middle; margin-top:0px;" onfocus="setTypingMode(1)">
                         Telex
                         <input type="radio" name="optInput" value="2" style="vertical-align:middle; margin-top:0px;" onfocus="setTypingMode(2)">
                         VNI
@@ -98,7 +97,6 @@
     </form>
 </div>
 
--->
 <%
                 }
 
@@ -114,7 +112,7 @@
 
 %>
 <!-- form comment -->
-<form method="post" name="frmComment" target="_blank" onsubmit="submitForm(this);return false;" action="utility">
+<form method="post" name="frmComment" target="_blank" onreset="InputDefault(this)" action="utility"><!--onsubmit="submitForm(this);return false;"-->
     <div style="padding-top:0px;">
         <div style="padding-top:10px; width:476px; background-color:#ffffff">
             <div style="padding-bottom:5px; overflow:hidden;">
@@ -128,13 +126,13 @@
             <div style="overflow:hidden;">
                 <div style="width:60%">
                     <input type="submit" value="Gửi" name="B1">
-                    <input type="button" value="Xoá trắng" name="B2" onclick="InputDefault();">
+                    <input type="reset" value="Xoá trắng" name="B2"">
                     <input type="hidden" name="catID" value="<%=request.getParameter("catID")%>">
                 </div>
                 <div style="width:40%; text-align:right;">
-                    <input type="radio" name="optInput" value="0" style="vertical-align:middle; margin-top:0px;" onfocus="setTypingMode(0)">
+                    <input type="radio" name="optInput" value="0" style="vertical-align:middle; margin-top:0px;" onfocus="setTypingMode(0)" checked="checked">
                     Off
-                    <input type="radio" name="optInput" value="1" style="vertical-align:middle; margin-top:0px;" onfocus="setTypingMode(1)" checked="">
+                    <input type="radio" name="optInput" value="1" style="vertical-align:middle; margin-top:0px;" onfocus="setTypingMode(1)">
                     Telex
                     <input type="radio" name="optInput" value="2" style="vertical-align:middle; margin-top:0px;" onfocus="setTypingMode(2)">
                     VNI
@@ -151,27 +149,27 @@
 
 <script type="text/javascript">
     function submitForm(theform){
-        document.frmComment.customerName.value = Trim(document.frmComment.customerName.value);
-        if (document.frmComment.customerName.value == '' || document.frmComment.customerName.value == 'H? tên')
+        theform.customerName.value = Trim(theform.customerName.value);
+        if (theform.customerName.value == '' || theform.customerName.value == 'Họ tên')
         {
             alert('Xin hay nhap Ho ten!');
-            document.frmComment.customerName.focus();
+            theform.customerName.focus();
             return;
         }
 
-        if ((SEmail = CheckEmailAddress(document.frmComment.customerEmail.value))=='')
+        if ((SEmail = CheckEmailAddress(theform.customerEmail.value))=='')
         {
             alert('Dia chi Email khong hop le!');
-            document.frmComment.customerEmail.focus();
+            theform.customerEmail.focus();
             return;
         }
 
-        document.frmComment.customerEmail.value = SEmail;
-        document.frmComment.txtAddedContent.value = Trim(document.frmComment.txtAddedContent.value);
-        if (document.frmComment.txtAddedContent.value == '')
+        theform.customerEmail.value = SEmail;
+        theform.txtAddedContent.value = Trim(theform.txtAddedContent.value);
+        if (theform.txtAddedContent.value == '')
         {
             alert('Xin hay nhap Noi dung!');
-            document.frmComment.txtAddedContent.focus();
+            theform.txtAddedContent.focus();
             return;
         }
 
@@ -192,11 +190,11 @@
     );
         return status;
     }
-    function InputDefault() {
-        document.frmComment.customerName.value = 'H? tên';
-        document.frmComment.customerEmail.value = 'Email';
-        document.frmComment.txtAddedContent.value = '';
-        document.frmComment.txtAddedContent.focus();
+    function InputDefault(theform) {
+        theform.customerName.value = 'Họ tên';
+        theform.customerEmail.value = 'Email';
+        theform.txtAddedContent.value = '';
+        theform.txtAddedContent.focus();
     }
     function NameOnFocus(field)
     {
