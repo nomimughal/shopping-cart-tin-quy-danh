@@ -29,7 +29,8 @@ public class utility extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+        response.setContentType("text/xml;charset=UTF-8");
+        response.setHeader("Cache-Control", "no-cache");
         PrintWriter out = response.getWriter();
         try {
             String catID = request.getParameter("catID");
@@ -68,6 +69,7 @@ public class utility extends HttpServlet {
         } catch (SQLException ex) {
             Logger.getLogger(utility.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
+            response.sendRedirect(request.getContextPath());
             out.close();
         }
     }
