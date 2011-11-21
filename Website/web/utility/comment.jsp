@@ -1,4 +1,4 @@
-﻿?<%-- 
+﻿<%-- 
     Document   : comment
     Created on : Nov 20, 2011, 2:51:12 PM
     Author     : CongDanh
@@ -26,9 +26,11 @@
                     Time time = rs.getTime("timeComment");
                     int cusID = rs.getInt("customerID");
                     pSt = con.prepareStatement("select customerName from tblCustomer where customerID = " + cusID);
-                    String name = pSt.executeQuery().getNString(1);
+                    java.sql.ResultSet rs1 = pSt.executeQuery();
+                    rs1.next();
+                    String name = rs1.getNString(1);
 %>
-<div clasd="parent">
+<div class="parent">
     Vào lúc <%= time.toString()%> ngày <%= date%>, <%= name%> ?ã vi?t:
     <br/>
     <%= cmt%>
@@ -38,16 +40,18 @@
 <%
                     pSt = con.prepareStatement("select * from tblComment where cmtID in (select childCommentID from tblCommentRelative where parentCommentID =?)");
                     pSt.setInt(1, cmtID);
-                    java.sql.ResultSet rs1 = pSt.executeQuery();
-                    while (rs.next()) {
+                    rs1 = pSt.executeQuery();
+                    while (rs1.next()) {
                         cmt = rs.getNString("comment");
                         date = rs.getDate("timeComment");
                         time = rs.getTime("timeComment");
                         cusID = rs.getInt("customerID");
                         pSt = con.prepareStatement("select customerName from tblCustomer where customerID = " + cusID);
-                        name = pSt.executeQuery().getNString(1);
+                        java.sql.ResultSet rs2 = pSt.executeQuery();
+                        rs2.next();
+                        name = rs2.getNString(1);
 %>
-<div class="child">
+<div class="child" style="padding-left: 20px">
     Vào lúc <%= time.toString()%> ngày <%= date%>, <%= name%> ?ã vi?t:
     <br/>
     <%= cmt%>
@@ -55,6 +59,7 @@
 <%
                     }
 %>
+<!--
 <div class="reply">
     <form name="frmReply" onsubmit="submitForm(this);return false;" action="utility">
         <div style="padding-top:0px;">
@@ -92,6 +97,8 @@
         </div>
     </form>
 </div>
+
+-->
 <%
                 }
 
